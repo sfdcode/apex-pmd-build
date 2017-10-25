@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<project xmlns='antlib:org.apache.tools.ant' basedir=".">
+  <property file="build.properties"/>
+  <path id="pmd.classpath">
+    <fileset dir="${pmd.dir}/lib"> 
+      <include name="**/*.jar" /> 
+    </fileset>
+  </path>
+
+  <taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask" classpathref="pmd.classpath" />
+  <taskdef name="cpd" classname="net.sourceforge.pmd.cpd.CPDTask" classpathref="pmd.classpath" />
+
+  <target name="pmd">
+    <pmd shortFilenames="false" >
+      <formatter type="${pmd.format}" toFile="outputPMD.${pmd.format}" />
+      <ruleset>rulesets/apex/complexity.xml</ruleset>
+      <ruleset>rulesets/apex/performance.xml</ruleset>
+      <ruleset>rulesets/apex/style.xml</ruleset>
+      <ruleset>rulesets/apex/braces.xml</ruleset>
+      <ruleset>rulesets/apex/apexunit.xml</ruleset>
+      <ruleset>rulesets/apex/security.xml</ruleset>
+      <ruleset>rulesets/apex/complexity.xml</ruleset>
+      <ruleset>rulesets/apex/empty.xml</ruleset>
+      <ruleset>rulesets/apex/metrics.xml</ruleset>
+      <ruleset>rulesets/apex/ruleset.xml</ruleset>
+      <fileset dir="${src.dir}">
+        <include name="**/*.cls"/>
+        <include name="**/*.trigger"/>
+      </fileset>
+    </pmd>
+  </target>
+
+  <target name="cpd">
+      <cpd minimumTokenCount="${cpd.minimumTokenCount}" language="apex" format="${cpd.format}" outputFile="outputCPD.${cpd.format}" encoding="UTF-8" ignoreLiterals="true">
+          <fileset dir="${src.dir}">
+              <include name="classes/*.cls"/>
+          </fileset>
+      </cpd>
+  </target>
+
+  <target name="all" depends="cpd,pmd"></target>
+</project>
